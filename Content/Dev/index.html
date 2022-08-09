@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>SA bouldering: dev</title>
+</head>
+
+<body>
+    <div id="container">
+        <div id="container-left">
+            <div>
+                <label for="username">username</label>
+                <input id="username" />
+            </div>
+            <div>
+                <label for="password">password</label>
+                <input id="password" />
+            </div>
+            <button id="modify-btn" onclick="fetchCurrentWall()">Modify current</button>
+            <input id="upload-setup" type="file" oninput="uploadSetup()" />
+            <input id="upload-img" type="file" oninput="imgInput()">
+            <button id="upload-btn" onclick="uploadFile()">Upload!</button>
+            <button id="save-btn" onclick="saveCurrent()">Save current setup</button>
+        </div>
+        <div id="image-container">
+            <img id="img" src="" />
+            <svg id="svg">
+            </svg>
+        </div>
+        <div id="container-right">
+            <div>
+                <button id="ellipse-btn" onclick="AddEllipse()">
+                    Add new Ellipse
+                </button>
+                <button id="triangle-btn" onclick="AddPolygon(3)">
+                    Add new Triangle
+                </button>
+                <button id="trapes-btn" onclick="AddPolygon(4)">
+                    Add new Trapes
+                </button>
+                <button id="polygon-btn" onclick="AddPolygon(8)">
+                    Add new Polygon
+                </button>
+            </div>
+            <div>
+                <button id="delete-seleceted-btn" onclick="deleteAllSelected()">
+                    Delete selected
+                </button>
+                <button id="unselect-all-btn" onclick="unselectAll()">
+                    Unselect All
+                </button>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+
+
+</body>
+
+</html>

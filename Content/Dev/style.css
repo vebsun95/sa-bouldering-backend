@@ -1,0 +1,60 @@
+body {
+    margin: 0;
+}
+
+#container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+#container-left {
+
+}
+
+#container-right {
+
+}
+
+#image-container {
+    width: min-content;
+    position: relative;
+}
+
+#image-container img {
+    max-height: 90vh;
+}
+
+#image-container svg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.svg-child, .drag, .point {
+    stroke-width: 2;
+    stroke: black;
+}
+
+.svg-child {
+    fill-opacity: 0;
+}
+
+.drag {
+    fill: lime;
+}
+
+.point {
+    fill: tomato;
+}
+
+.selected {
+    stroke: gold;
+}
+
+.unselected.drag, .unselected.point {
+    opacity: 0;
+}
