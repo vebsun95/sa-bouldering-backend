@@ -6,9 +6,9 @@ public record BoulderDto {
     public int Grade {get; set;}
     public int Ascents {get; set;}
     public bool Checked {get; set;}
-    public HoldIndexDto[] Holds {get; set;}
+    public BoulderClimbingHoldDto[] Holds {get; set;}
 
-    public BoulderDto(string name, string fA, int grade, int ascents, bool @checked, HoldIndexDto[] holds)
+    public BoulderDto(string name, string fA, int grade, int ascents, bool @checked, BoulderClimbingHoldDto[] holds)
     {
         Name = name;
         FA = fA;

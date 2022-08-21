@@ -17,7 +17,153 @@ namespace backend.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.6");
 
-            modelBuilder.Entity("backend.Models.ApplicationUser", b =>
+            modelBuilder.Entity("backend.Models.Ascent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("RouteId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RouteId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Ascents");
+                });
+
+            modelBuilder.Entity("backend.Models.Boulder", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("FAId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Grade")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Index")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("WallId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FAId");
+
+                    b.HasIndex("WallId");
+
+                    b.ToTable("Boulders");
+                });
+
+            modelBuilder.Entity("backend.Models.ClimbingHold", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("BoulderId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<float>("Cx")
+                        .HasColumnType("REAL");
+
+                    b.Property<float>("Cy")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("Index")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("NeighbourEast")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("NeighbourNorth")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("NeighbourSouth")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("NeighbourWest")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Rotation")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<float>("Rx")
+                        .HasColumnType("REAL");
+
+                    b.Property<float>("Ry")
+                        .HasColumnType("REAL");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("WallId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BoulderId");
+
+                    b.HasIndex("WallId");
+
+                    b.ToTable("ClimbingHolds");
+                });
+
+            modelBuilder.Entity("backend.Models.ClimbingHoldBoulder", b =>
+                {
+                    b.Property<int>("BoulderId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ClimbingHoldId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("BoulderId", "ClimbingHoldId");
+
+                    b.HasIndex("ClimbingHoldId");
+
+                    b.ToTable("ClimbingHoldBoulders");
+                });
+
+            modelBuilder.Entity("backend.Models.Point", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("ClimbingHoldId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<float>("X")
+                        .HasColumnType("REAL");
+
+                    b.Property<float>("Y")
+                        .HasColumnType("REAL");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClimbingHoldId");
+
+                    b.ToTable("Point");
+                });
+
+            modelBuilder.Entity("backend.Models.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -81,193 +227,18 @@ namespace backend.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("backend.Models.Ascent", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("RouteId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RouteId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Ascents");
-                });
-
-            modelBuilder.Entity("backend.Models.Boulder", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("FAId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Grade")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Index")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("WallId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FAId");
-
-                    b.HasIndex("WallId");
-
-                    b.ToTable("Boulders");
-                });
-
-            modelBuilder.Entity("backend.Models.EllipseHold", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<float>("Cx")
-                        .HasColumnType("REAL");
-
-                    b.Property<float>("Cy")
-                        .HasColumnType("REAL");
-
-                    b.Property<int>("Index")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Rotation")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<float>("Rx")
-                        .HasColumnType("REAL");
-
-                    b.Property<float>("Ry")
-                        .HasColumnType("REAL");
-
-                    b.Property<int>("WallId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("WallId");
-
-                    b.ToTable("EllipseHolds");
-                });
-
-            modelBuilder.Entity("backend.Models.HoldIndex", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("BoulderId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Index")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BoulderId");
-
-                    b.ToTable("HoldIndices");
-                });
-
-            modelBuilder.Entity("backend.Models.Neighbour", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Direction")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("Index")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("NeighbourIndex")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("WallId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("WallId");
-
-                    b.ToTable("Neighbours");
-                });
-
-            modelBuilder.Entity("backend.Models.Point", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("PolygonHoldId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<float>("X")
-                        .HasColumnType("REAL");
-
-                    b.Property<float>("Y")
-                        .HasColumnType("REAL");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PolygonHoldId");
-
-                    b.ToTable("Points");
-                });
-
-            modelBuilder.Entity("backend.Models.PolygonHold", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Index")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("WallId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("WallId");
-
-                    b.ToTable("PolygonHolds");
-                });
-
             modelBuilder.Entity("backend.Models.Wall", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("IsOutDated")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<int>("NrOfHolds")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("URI")
                         .IsRequired()
@@ -276,7 +247,13 @@ namespace backend.Migrations
                     b.Property<DateTime>("Uploaded")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("UploadedById")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UploadedById");
 
                     b.ToTable("Walls");
                 });
@@ -417,7 +394,7 @@ namespace backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("backend.Models.ApplicationUser", "User")
+                    b.HasOne("backend.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
 
@@ -428,66 +405,63 @@ namespace backend.Migrations
 
             modelBuilder.Entity("backend.Models.Boulder", b =>
                 {
-                    b.HasOne("backend.Models.ApplicationUser", "FA")
+                    b.HasOne("backend.Models.User", "FA")
                         .WithMany()
                         .HasForeignKey("FAId");
 
-                    b.HasOne("backend.Models.Wall", "Wall")
-                        .WithMany()
-                        .HasForeignKey("WallId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("backend.Models.Wall", null)
+                        .WithMany("Boulders")
+                        .HasForeignKey("WallId");
 
                     b.Navigation("FA");
-
-                    b.Navigation("Wall");
                 });
 
-            modelBuilder.Entity("backend.Models.EllipseHold", b =>
-                {
-                    b.HasOne("backend.Models.Wall", "Wall")
-                        .WithMany("EllipseHolds")
-                        .HasForeignKey("WallId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Wall");
-                });
-
-            modelBuilder.Entity("backend.Models.HoldIndex", b =>
+            modelBuilder.Entity("backend.Models.ClimbingHold", b =>
                 {
                     b.HasOne("backend.Models.Boulder", null)
                         .WithMany("Holds")
                         .HasForeignKey("BoulderId");
+
+                    b.HasOne("backend.Models.Wall", null)
+                        .WithMany("ClimbingHolds")
+                        .HasForeignKey("WallId");
                 });
 
-            modelBuilder.Entity("backend.Models.Neighbour", b =>
+            modelBuilder.Entity("backend.Models.ClimbingHoldBoulder", b =>
                 {
-                    b.HasOne("backend.Models.Wall", "Wall")
-                        .WithMany("Neighbours")
-                        .HasForeignKey("WallId")
+                    b.HasOne("backend.Models.Boulder", "Boulder")
+                        .WithMany()
+                        .HasForeignKey("BoulderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Wall");
+                    b.HasOne("backend.Models.ClimbingHold", "ClimbingHold")
+                        .WithMany()
+                        .HasForeignKey("ClimbingHoldId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Boulder");
+
+                    b.Navigation("ClimbingHold");
                 });
 
             modelBuilder.Entity("backend.Models.Point", b =>
                 {
-                    b.HasOne("backend.Models.PolygonHold", null)
+                    b.HasOne("backend.Models.ClimbingHold", null)
                         .WithMany("Points")
-                        .HasForeignKey("PolygonHoldId");
+                        .HasForeignKey("ClimbingHoldId");
                 });
 
-            modelBuilder.Entity("backend.Models.PolygonHold", b =>
+            modelBuilder.Entity("backend.Models.Wall", b =>
                 {
-                    b.HasOne("backend.Models.Wall", "Wall")
-                        .WithMany("PolygonHolds")
-                        .HasForeignKey("WallId")
+                    b.HasOne("backend.Models.User", "UploadedBy")
+                        .WithMany()
+                        .HasForeignKey("UploadedById")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Wall");
+                    b.Navigation("UploadedBy");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -501,7 +475,7 @@ namespace backend.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("backend.Models.ApplicationUser", null)
+                    b.HasOne("backend.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -510,7 +484,7 @@ namespace backend.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("backend.Models.ApplicationUser", null)
+                    b.HasOne("backend.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -525,7 +499,7 @@ namespace backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("backend.Models.ApplicationUser", null)
+                    b.HasOne("backend.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -534,7 +508,7 @@ namespace backend.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("backend.Models.ApplicationUser", null)
+                    b.HasOne("backend.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -546,18 +520,16 @@ namespace backend.Migrations
                     b.Navigation("Holds");
                 });
 
-            modelBuilder.Entity("backend.Models.PolygonHold", b =>
+            modelBuilder.Entity("backend.Models.ClimbingHold", b =>
                 {
                     b.Navigation("Points");
                 });
 
             modelBuilder.Entity("backend.Models.Wall", b =>
                 {
-                    b.Navigation("EllipseHolds");
+                    b.Navigation("Boulders");
 
-                    b.Navigation("Neighbours");
-
-                    b.Navigation("PolygonHolds");
+                    b.Navigation("ClimbingHolds");
                 });
 #pragma warning restore 612, 618
         }

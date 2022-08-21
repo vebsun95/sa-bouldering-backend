@@ -5,7 +5,7 @@ public class PolygonHoldDto{
     public PointDto[] Points {get; set;}
 }
 
-public class PointDto {
+public struct PointDto {
     public float X {get; set;}
     public float Y {get; set;}
 }

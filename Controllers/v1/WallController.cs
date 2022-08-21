@@ -1,9 +1,11 @@
+using backend.Contracts.v1.DTO;
 using backend.Contracts.v1.Requests;
 using backend.Contracts.v1.Responses;
 using backend.Data;
 using backend.Models;
 using backend.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -18,18 +20,21 @@ public class WallController : ControllerBase
     private readonly ILogger<WallController> _logger;
     private readonly IWallRepository _wallRepo;
     private readonly ApplicationDbContext _context;
+    private readonly UserManager<User> _userManager;
 
-    public WallController(ILogger<WallController> logger, ApplicationDbContext context, IWallRepository wallRepo)
+    public WallController(ILogger<WallController> logger, ApplicationDbContext context, IWallRepository wallRepo, UserManager<User> userManager)
     {
         _logger = logger;
         _wallRepo = wallRepo;
         _context = context;
+        _userManager = userManager;
     }
 
     [HttpGet]
     [Route("get")]
-    public ActionResult<LatestWallResponse> Get(string? img)
+    public async Task<ActionResult<LatestWallResponse>> Get(string wallUri)
     {
+        /*
         Console.WriteLine(img);
         Console.WriteLine(img is null);
         Wall? wall;
@@ -58,6 +63,18 @@ public class WallController : ControllerBase
         }
         _logger.LogInformation("Fetched wall succesfull");
         return Ok(new LatestWallResponse(wall));
+        */
+        var wall = await _context.Walls.Include(w => w.ClimbingHolds).ThenInclude(ch => ch.Points).FirstAsync(w => w.URI == wallUri);
+        if(wall is null)
+            return BadRequest($"Could not find wall {wallUri}");
+        return Ok(new LatestWallResponse(uri: wall.URI, holds: wall.ClimbingHolds.Select(ch => ch.TransfromToDTO()).ToArray()));
+    }
+
+    [HttpGet]
+    [Route("all")]
+    public IActionResult GetAllWalls()
+    {
+        return Ok(_context.Walls.Select(w => new SimpleWallDto() {Name=w.Name, URI=w.URI,}));
     }
 
     [HttpPost]
@@ -73,12 +90,12 @@ public class WallController : ControllerBase
         {
             await wallImage.CopyToAsync(fileStream);
         }
-        foreach (var eHold in request.Ellipseholds)
-        {
-            Console.WriteLine(eHold.Cy);
-            Console.WriteLine(eHold.Cx);
-        }
-        var result = await _wallRepo.AddNewWall(fingerPrint, request.Name, request.Ellipseholds, request.PolygonHolds);
-        return result ? Ok() : BadRequest("Failed to add new wall");
+        var user = await _userManager.GetUserAsync(User);
+        var wall = new Wall(filePath, request.Name, user);
+        wall.ClimbingHolds.AddRange(request.ClimbingHolds.Select((ch, i) => ClimbingHold.Generate(i, ch)));
+        await _context.AddAsync(wall);
+        await _context.SaveChangesAsync();
+        //var result = await _wallRepo.AddNewWall(fingerPrint, request.Name, request.ClimbingHolds);
+        return Ok();
     }
 }

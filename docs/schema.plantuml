@@ -1,33 +1,86 @@
 @startuml
-
-' hide the spot
-hide circle
-
-' avoid problems with angled crows feet
-skinparam linetype ortho
-
-entity "Entity01" as e01 {
-  *e1_id : number <<generated>>
-  --
-  *name : text
-  description : text
+entity Wall {
+ **Id** [int]
+ URI [string]
+ Name [string]
+ Uploaded [datetime]
+ UploadedBy [int]
+---
+PRIMARY KEY ( Id )
+FOREIGN KEY UploadedBy REFERENCES User( Id )
 }
 
-entity "Entity02" as e02 {
-  *e2_id : number <<generated>>
-  --
-  *e1_id : number <<FK>>
-  other_details : text
+entity ClimbingHold {
+ **Id** [int]
+ WallId [int]
+ Type [int]
+ Index [int]
+ Cx [double]
+ Cy [double]
+ Rx [double]
+ Ry [double]
+ Rotation [int]
+---
+PRIMARY KEY( Id )
+FOREIGN KEY WallId REFERENCES Wall(Id)
 }
 
-entity "Entity03" as e03 {
-  *e3_id : number <<generated>>
-  --
-  e1_id : number <<FK>>
-  other_details : text
+entity Point {
+ **Id** [int]
+ ClimbingHoldId [int]
+ X [double]
+ Y [double]
+---
+PRIMARY KEY( Id )
+FOREIGN KEY ClimbingHoldId REFERENCES ClimbingHold( Id )
 }
 
-e01 ||..o{ e02
-e01 |o..o{ e03
+entity Neighbour {
+ **Id** [int]
+ ClimbingHoldId [int]
+ ClimbingHoldNeighbourId [int]
+ Direction [int]
+ ---
+ PRIMARY KEY( Id )
+ FOREIGN KEY ClimbingHoldId REFERENCES ClimbingHold( Id )
+ FOREIGN KEY ClimbingHoldNeighbourId REFERENCES ClimbingHold( Id )
+}
 
+entity Boulder {
+ **Id** [int]
+ WallId [int]
+ Index [int]
+ Name [string]
+ UserId [int]
+ Grade [int]
+ ---
+ PRIMARY KEY( Id )
+ FOREIGN KEY wallId REFERENCES Wall( Id )
+ FOREIGN KEY UserId REFERENCES User( Id )
+}
+
+entity BoulderHolds {
+ **BoulderId** [int]
+ **ClimbingHoldId** [int]
+ ---
+ PRIMARY KEY( BoulderId, ClimbingHoldId )
+ FOREIGN KEY boulderId REFERENCES Boulder( Id )
+ FOREIGN KEY ClimbingHoldId REFERENCES ClimbingHold( Id )
+}
+
+entity User {
+ **Id** [int]
+ ---
+ PRIMARY KEY( Id )
+}
+
+ClimbingHold::WallId -- Wall::Id
+Point::ClimbingHoldId -- ClimbingHold::Id
+Boulder::WallId -- Wall::Id
+Neighbour::ClimbingHoldId -- ClimbingHold::Id
+Neighbour::ClimbingHoldNeighbourId -- ClimbingHold::Id
+Boulder::UserId -- User::Id
+BoulderHolds::BoulderId -- Boulder::Id
+BoulderHolds::ClimbingHoldId -- ClimbingHold::Id
+Wall::UploadedBy -- User::Id
 @enduml

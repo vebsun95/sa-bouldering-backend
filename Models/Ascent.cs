@@ -6,11 +6,9 @@ namespace backend.Models;
 
 public class Ascent {
     public int Id {get; set;}
-    public Boulder Route {get; set;}
-    public ApplicationUser User {get; set;}
+    public User User {get; set;}
     private Ascent(){}
-    public Ascent(Boulder route, ApplicationUser user) {
-        Route = route;
+    public Ascent(User user) {
         User = user;
     }
 }

@@ -5,17 +5,14 @@ using Microsoft.AspNetCore.Identity;
 
 namespace backend.Data;
 
-public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole, string> 
+public class ApplicationDbContext : IdentityDbContext<User, IdentityRole, string> 
 {
     #nullable disable
     public virtual DbSet<Boulder> Boulders {get; set;}
     public virtual DbSet<Ascent> Ascents {get; set;}
     public virtual DbSet<Wall> Walls {get; set;}
-    public virtual DbSet<EllipseHold> EllipseHolds {get; set;}
-    public virtual DbSet<PolygonHold> PolygonHolds {get; set;}
-    public virtual DbSet<Point> Points {get; set;}
-    public virtual DbSet<Neighbour> Neighbours {get; set;}
-    public virtual DbSet<HoldIndex> HoldIndices {get; set;}
+    public virtual DbSet<ClimbingHold> ClimbingHolds {get; set;}
+    public virtual DbSet<ClimbingHoldBoulder> ClimbingHoldBoulders {get; set;}
     #nullable restore
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
@@ -29,15 +26,14 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
         // Customize the ASP.NET Identity model and override the defaults if needed.
         // For example, you can rename the ASP.NET Identity table names and more.
         // Add your customizations after calling base.OnModelCreating(builder);
-        builder.Entity<Boulder>().HasKey(a => a.Id);
+
+        // Primary Keys
+        builder.Entity<Wall>().HasKey(w => w.Id);
         builder.Entity<Ascent>().HasKey(a => a.Id);
-        builder.Entity<Wall>().HasKey(a => a.Id);
-        builder.Entity<EllipseHold>().HasKey(a => a.Id);
-        builder.Entity<PolygonHold>().HasKey(a => a.Id);
-        builder.Entity<Point>().HasKey(a => a.Id);
-        builder.Entity<Neighbour>().HasKey(a => a.Id);
-        builder.Entity<HoldIndex>().HasKey(a => a.Id);
+        builder.Entity<Boulder>().HasKey(b => b.Id);
+        builder.Entity<ClimbingHold>().HasKey(ch => ch.Id);
+        builder.Entity<ClimbingHoldBoulder>().HasKey(chb => new {chb.BoulderId, chb.ClimbingHoldId});
 
-
+        // Relationships
     }
 }

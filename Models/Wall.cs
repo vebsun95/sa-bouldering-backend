@@ -3,35 +3,19 @@ public class Wall {
     public int Id {get; set;}
     public string URI {get; set;}
     public string Name {get; set;}
-    public int NrOfHolds {get; set;}
     public DateTime Uploaded {get; set;}
-    private List<EllipseHold> _ellipseHolds = new();
-    public IEnumerable<EllipseHold> EllipseHolds => _ellipseHolds.AsReadOnly();
-    private List<PolygonHold> _polygonHolds = new();
-    public IEnumerable<PolygonHold> PolygonHolds => _polygonHolds.AsReadOnly();
-    private List<Neighbour> _neighbours = new();
-    public IEnumerable<Neighbour> Neighbours => _neighbours.AsReadOnly();
-    public Wall(string uri, string name) {
-        this.URI = uri;
-        this.Name = name;
-        this.Uploaded = DateTime.Now;
-        this.NrOfHolds = 0;
+    public User UploadedBy { get; set; }
+    public bool IsOutDated { get; set; } = false;
+    public List<ClimbingHold> ClimbingHolds {get; set;} = new();
+    public List<Boulder> Boulders {get; set;} = new();
+    public Wall(string uri, string name, User uploadedBy)
+    {
+        URI = uri;
+        Name = name;
+        Uploaded = DateTime.Now;
+        UploadedBy = uploadedBy;
     }
     private Wall(){}
-    public void AddPolygonHold(PolygonHold hold) {
-        _polygonHolds.Add(hold);
-        NrOfHolds++;
-    }
-    public void AddEllipseHold(EllipseHold hold) {
-        _ellipseHolds.Add(hold);
-        NrOfHolds++;
-    }
-    public void AddNeighbour(Neighbour neighbour) {
-        _neighbours.Add(neighbour);
-    }
-    public void AddNeighbour(int index, int neighbourIndex) {
-        _neighbours.Add(new Neighbour() {Index=index, NeighbourIndex=neighbourIndex});
-    }
 }
 
 public record Neighbour {
@@ -40,5 +24,13 @@ public record Neighbour {
 
     public int  Index {get; set;}
     public int NeighbourIndex {get; set;}
-    public string Direction {get; set;}
+    public DIRECTION Direction {get; set;}
+}
+
+public enum DIRECTION
+{
+    NORTH,
+    SOUTH,
+    WEST,
+    EAST,
 }

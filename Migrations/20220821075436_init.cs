@@ -49,22 +49,6 @@ namespace backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Walls",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    URI = table.Column<string>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    NrOfHolds = table.Column<int>(type: "INTEGER", nullable: false),
-                    Uploaded = table.Column<DateTime>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Walls", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -171,16 +155,39 @@ namespace backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Walls",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    URI = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Uploaded = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UploadedById = table.Column<string>(type: "TEXT", nullable: false),
+                    IsOutDated = table.Column<bool>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Walls", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Walls_AspNetUsers_UploadedById",
+                        column: x => x.UploadedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Boulders",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Index = table.Column<int>(type: "INTEGER", nullable: false),
-                    WallId = table.Column<int>(type: "INTEGER", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     FAId = table.Column<string>(type: "TEXT", nullable: true),
-                    Grade = table.Column<int>(type: "INTEGER", nullable: false)
+                    Grade = table.Column<int>(type: "INTEGER", nullable: false),
+                    WallId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -194,75 +201,7 @@ namespace backend.Migrations
                         name: "FK_Boulders_Walls_WallId",
                         column: x => x.WallId,
                         principalTable: "Walls",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "EllipseHolds",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    WallId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Index = table.Column<int>(type: "INTEGER", nullable: false),
-                    Cx = table.Column<float>(type: "REAL", nullable: false),
-                    Cy = table.Column<float>(type: "REAL", nullable: false),
-                    Rx = table.Column<float>(type: "REAL", nullable: false),
-                    Ry = table.Column<float>(type: "REAL", nullable: false),
-                    Rotation = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EllipseHolds", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_EllipseHolds_Walls_WallId",
-                        column: x => x.WallId,
-                        principalTable: "Walls",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Neighbours",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    WallId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Index = table.Column<int>(type: "INTEGER", nullable: false),
-                    NeighbourIndex = table.Column<int>(type: "INTEGER", nullable: false),
-                    Direction = table.Column<string>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Neighbours", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Neighbours_Walls_WallId",
-                        column: x => x.WallId,
-                        principalTable: "Walls",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PolygonHolds",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    WallId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Index = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PolygonHolds", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_PolygonHolds_Walls_WallId",
-                        column: x => x.WallId,
-                        principalTable: "Walls",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -291,42 +230,82 @@ namespace backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "HoldIndices",
+                name: "ClimbingHolds",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Index = table.Column<int>(type: "INTEGER", nullable: false),
                     Type = table.Column<int>(type: "INTEGER", nullable: false),
-                    BoulderId = table.Column<int>(type: "INTEGER", nullable: true)
+                    NeighbourNorth = table.Column<int>(type: "INTEGER", nullable: false),
+                    NeighbourSouth = table.Column<int>(type: "INTEGER", nullable: false),
+                    NeighbourWest = table.Column<int>(type: "INTEGER", nullable: false),
+                    NeighbourEast = table.Column<int>(type: "INTEGER", nullable: false),
+                    Cx = table.Column<float>(type: "REAL", nullable: false),
+                    Cy = table.Column<float>(type: "REAL", nullable: false),
+                    Rx = table.Column<float>(type: "REAL", nullable: false),
+                    Ry = table.Column<float>(type: "REAL", nullable: false),
+                    Rotation = table.Column<int>(type: "INTEGER", nullable: false),
+                    BoulderId = table.Column<int>(type: "INTEGER", nullable: true),
+                    WallId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_HoldIndices", x => x.Id);
+                    table.PrimaryKey("PK_ClimbingHolds", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_HoldIndices_Boulders_BoulderId",
+                        name: "FK_ClimbingHolds_Boulders_BoulderId",
                         column: x => x.BoulderId,
                         principalTable: "Boulders",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ClimbingHolds_Walls_WallId",
+                        column: x => x.WallId,
+                        principalTable: "Walls",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Points",
+                name: "ClimbingHoldBoulders",
+                columns: table => new
+                {
+                    BoulderId = table.Column<int>(type: "INTEGER", nullable: false),
+                    ClimbingHoldId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Type = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ClimbingHoldBoulders", x => new { x.BoulderId, x.ClimbingHoldId });
+                    table.ForeignKey(
+                        name: "FK_ClimbingHoldBoulders_Boulders_BoulderId",
+                        column: x => x.BoulderId,
+                        principalTable: "Boulders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ClimbingHoldBoulders_ClimbingHolds_ClimbingHoldId",
+                        column: x => x.ClimbingHoldId,
+                        principalTable: "ClimbingHolds",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Point",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     X = table.Column<float>(type: "REAL", nullable: false),
                     Y = table.Column<float>(type: "REAL", nullable: false),
-                    PolygonHoldId = table.Column<int>(type: "INTEGER", nullable: true)
+                    ClimbingHoldId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Points", x => x.Id);
+                    table.PrimaryKey("PK_Point", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Points_PolygonHolds_PolygonHoldId",
-                        column: x => x.PolygonHoldId,
-                        principalTable: "PolygonHolds",
+                        name: "FK_Point_ClimbingHolds_ClimbingHoldId",
+                        column: x => x.ClimbingHoldId,
+                        principalTable: "ClimbingHolds",
                         principalColumn: "Id");
                 });
 
@@ -388,29 +367,29 @@ namespace backend.Migrations
                 column: "WallId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EllipseHolds_WallId",
-                table: "EllipseHolds",
-                column: "WallId");
+                name: "IX_ClimbingHoldBoulders_ClimbingHoldId",
+                table: "ClimbingHoldBoulders",
+                column: "ClimbingHoldId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_HoldIndices_BoulderId",
-                table: "HoldIndices",
+                name: "IX_ClimbingHolds_BoulderId",
+                table: "ClimbingHolds",
                 column: "BoulderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Neighbours_WallId",
-                table: "Neighbours",
+                name: "IX_ClimbingHolds_WallId",
+                table: "ClimbingHolds",
                 column: "WallId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Points_PolygonHoldId",
-                table: "Points",
-                column: "PolygonHoldId");
+                name: "IX_Point_ClimbingHoldId",
+                table: "Point",
+                column: "ClimbingHoldId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PolygonHolds_WallId",
-                table: "PolygonHolds",
-                column: "WallId");
+                name: "IX_Walls_UploadedById",
+                table: "Walls",
+                column: "UploadedById");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -434,31 +413,25 @@ namespace backend.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "EllipseHolds");
+                name: "ClimbingHoldBoulders");
 
             migrationBuilder.DropTable(
-                name: "HoldIndices");
-
-            migrationBuilder.DropTable(
-                name: "Neighbours");
-
-            migrationBuilder.DropTable(
-                name: "Points");
+                name: "Point");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "ClimbingHolds");
+
+            migrationBuilder.DropTable(
                 name: "Boulders");
 
             migrationBuilder.DropTable(
-                name: "PolygonHolds");
+                name: "Walls");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Walls");
         }
     }
 }

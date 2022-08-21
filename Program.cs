@@ -13,7 +13,7 @@ builder.WebHost.ConfigureKestrel(options => options.Listen(System.Net.IPAddress.
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite($"Data Source={Path.Combine("Data", "database.db")}"))
-    .AddIdentity<ApplicationUser, IdentityRole>(options =>
+    .AddIdentity<User, IdentityRole>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false;
     options.User.RequireUniqueEmail = false;

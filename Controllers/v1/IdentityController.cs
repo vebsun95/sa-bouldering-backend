@@ -11,12 +11,12 @@ namespace backend.Controllers.v1.IdentityController;
 public class IdentityController : ControllerBase
 {
     private readonly ILogger<IdentityController> _logger;
-    private readonly SignInManager<ApplicationUser> _signInManager;
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly SignInManager<User> _signInManager;
+    private readonly UserManager<User> _userManager;
     private readonly RoleManager<IdentityRole> _roleMangager;
     private readonly ApplicationDbContext _context;
 
-    public IdentityController(ILogger<IdentityController> logger, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, ApplicationDbContext context, RoleManager<IdentityRole> roleManager)
+    public IdentityController(ILogger<IdentityController> logger, SignInManager<User> signInManager, UserManager<User> userManager, ApplicationDbContext context, RoleManager<IdentityRole> roleManager)
     {
         _logger = logger;
         _roleMangager = roleManager;
@@ -27,7 +27,7 @@ public class IdentityController : ControllerBase
     [HttpGet]
     [Route("create_test")]
     public  ActionResult CreateTest() {
-        var user = new ApplicationUser() {UserName="vebsun", Email="vebsun@mail.no"};
+        var user = new User() {UserName="vebsun", Email="vebsun@mail.no"};
          _userManager.CreateAsync(user, "passord").Wait();
          _roleMangager.CreateAsync(new IdentityRole() {Name="admin"}).Wait();
          _userManager.AddToRoleAsync(user, "admin").Wait();
@@ -53,7 +53,7 @@ public class IdentityController : ControllerBase
     [Route("register")]
     public async Task<ActionResult> Register(LoginRequest input)
     {
-        var user = new ApplicationUser();
+        var user = new User();
         user.UserName = input.Username;
         var result = await _userManager.CreateAsync(user, input.Password);
         if (result.Succeeded)

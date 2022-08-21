@@ -22,6 +22,7 @@ public class WallRepository : IWallRepository {
         _scopeFactory = scopeFactory;
     }
     private async void setWall() {
+        /*
         using(var scope = _scopeFactory.CreateScope())
         {
             var _context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -31,6 +32,7 @@ public class WallRepository : IWallRepository {
                 .Include(w => w.Neighbours)
                 .OrderByDescending(w => w.Id).FirstAsync();
         }
+        */
     }
     public bool CheckForExisting() {
         if(_wall is null) {
@@ -45,6 +47,7 @@ public class WallRepository : IWallRepository {
         return _wall!;
     }
     public async Task<bool> AddNewWall(string imgURI, string name, EllipseHoldDto[] eHoldsDtos, PolygonHoldDto[] pHoldsDtos) {
+        /*
         using(var scope = _scopeFactory.CreateScope())
         {
             var _context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -129,6 +132,7 @@ public class WallRepository : IWallRepository {
             await _context.Walls.AddAsync(wall);
             await _context.SaveChangesAsync();
         }
+        */
         return true;
     }
     
